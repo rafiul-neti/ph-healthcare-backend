@@ -14,3 +14,5 @@ pnpm-workspace.yaml
 .vscode
 
 git_fingerprint.txt
+
+google_client_secret.json
