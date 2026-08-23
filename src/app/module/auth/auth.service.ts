@@ -14,7 +14,7 @@ import type {
   IRegisterPatientPayload,
   IRequestUser,
 } from "./auth.interface";
-import {  TokenPayload } from "google-auth-library";
+import { TokenPayload } from "google-auth-library";
 import { googleClient } from "../../lib/googleAuth";
 
 const registerPatient = async (payload: IRegisterPatientPayload) => {
@@ -93,6 +93,12 @@ const loginUser = async (payload: ILoginUserPayload) => {
 
   if (user.isDeleted || user.status === UserStatus.DELETED) {
     throw new Error("User is deleted");
+  }
+
+  if (user.password === null && user.googleId !== null) {
+    throw new Error(
+      "It looks like you registered using Google. Please 'Sign in with Google'.",
+    );
   }
 
   const isPasswordMatched = await bcrypt.compare(
@@ -230,15 +236,59 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
   let user = isPatientExists;
 
   if (!user) {
-    user = await prisma.user.create({
-      data: {
-        name: googleIdTokenPayload.name ?? "name",
+    const isPatientExistsWithCredentials = await prisma.user.findFirst({
+      where: {
         email: googleIdTokenPayload.email,
         role: Role.PATIENT,
-        googleId: googleIdTokenPayload.sub,
-        authProvider: AuthProvider.GOOGLE,
+        authProvider: AuthProvider.CREDENTIAL,
       },
     });
+
+    if (isPatientExistsWithCredentials) {
+      if (!isPatientExistsWithCredentials.emailVerified) {
+        throw new Error("Email not verified!");
+      }
+
+      if (isPatientExistsWithCredentials.status === UserStatus.BLOCKED) {
+        throw new Error(
+          "Your account has been blocked. Please contact support.",
+        );
+      }
+
+      if (
+        isPatientExistsWithCredentials.status === UserStatus.DELETED ||
+        isPatientExistsWithCredentials.isDeleted
+      ) {
+        throw new Error(
+          "Your account has been deleted. Please contact support.",
+        );
+      }
+
+      user = await prisma.user.update({
+        where: { id: isPatientExistsWithCredentials.id },
+        data: { googleId: googleIdTokenPayload.sub },
+      });
+    } else {
+      // user register with google
+      user = await prisma.user.create({
+        data: {
+          name: googleIdTokenPayload.name ?? "name",
+          email: googleIdTokenPayload.email,
+          role: Role.PATIENT,
+          googleId: googleIdTokenPayload.sub,
+          authProvider: AuthProvider.GOOGLE,
+          emailVerified: true,
+        },
+      });
+    }
+  }
+
+  if (user.status === UserStatus.BLOCKED) {
+    throw new Error("Your account has been blocked. Please contact support.");
+  }
+
+  if (user.status === UserStatus.DELETED || user.isDeleted) {
+    throw new Error("Your account has been deleted. Please contact support.");
   }
 
   const jwtPayload = {
