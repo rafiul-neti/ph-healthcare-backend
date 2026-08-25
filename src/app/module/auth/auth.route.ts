@@ -13,6 +13,11 @@ router.post(
   AuthController.registerPatient,
 );
 router.post(
+  "/verify-email",
+  validateRequest(AuthValidationSchemas.VerifyEmailShema),
+  AuthController.verifyPatientEmail,
+);
+router.post(
   "/login",
   validateRequest(AuthValidationSchemas.LoginZodSchema),
   AuthController.loginUser,
@@ -23,6 +28,17 @@ router.get(
   AuthController.getMe,
 );
 router.post("/refresh-token", AuthController.refreshToken);
-
 router.post("/google", AuthController.googleLogin);
+router.post(
+  "/forgot-password",
+  validateRequest(AuthValidationSchemas.ForgotPasswordSchema),
+  AuthController.forgotPassword,
+);
+router.post(
+  "/reset-password",
+  auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
+  validateRequest(AuthValidationSchemas.ResetPasswordSchema),
+  AuthController.resetPassword,
+);
+
 export const AuthRoutes = router;
