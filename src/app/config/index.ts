@@ -32,4 +32,22 @@ export default {
   cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
   cloudinary_api_key: process.env.CLOUDNINARY_API_KEY!,
   cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET!,
+  bkash_sandbox_url: process.env.BKASH_SANDBOX_URL!,
+  bkash_username: process.env.BKASH_USERNAME!,
+  bkash_password: process.env.BKASH_PASSWORD!,
+  bkash_app_key: process.env.BKASH_APP_KEY!,
+  bkash_app_secret: process.env.BKASH_APP_SECRET!,
+  bkash_successful_01: Number(
+    process.env.BKASH_SUCCESSFUL_TRANSACTIONS_NUMBER_01!,
+  ),
+  bkash_successful_02: Number(
+    process.env.BKASH_SUCCESSFUL_TRANSACTIONS_NUMBER_02!,
+  ),
+  bkash_successful_03: Number(
+    process.env.BKASH_SUCCESSFUL_TRANSACTIONS_NUMBER_03!,
+  ),
+  bkash_failed_01: Number(process.env.BKASH_FAILED_TRANSACTIONS_NUMBER_01!),
+  bkash_failed_02: Number(process.env.BKASH_FAILED_TRANSACTIONS_NUMBER_02!),
+  bkash_pin: Number(process.env.BKASH_PIN!),
+  bkash_OTP: Number(process.env.BKASH_OTP!),
 };

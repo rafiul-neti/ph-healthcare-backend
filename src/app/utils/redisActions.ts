@@ -7,6 +7,7 @@ export const Actions = {
   GET_OTP: "GET_OTP",
   DEL_OTP: "DEL_OTP",
   SET_REGISTRATION_PAYLOAD: "SET_REGISTRATION_PAYLOAD",
+  TIME_TO_LEAVE: "TIME_TO_LEAVE",
 } as const;
 
 export const RedisKeyPrefix = {
@@ -14,6 +15,7 @@ export const RedisKeyPrefix = {
   PATIENT_REGISTRATION_DATA: "patient-registration-data",
   FORGOT_PASSWORD_OTP: "forgot-password-OTP",
   RESET_PASSWORD_OTP: "reset-password-OTP",
+  BKASH: "bkash",
 } as const;
 
 type OTPAction = (typeof Actions)[keyof typeof Actions];
@@ -25,12 +27,15 @@ export const redisActions = async (otpActionsPayload: {
   action: OTPAction;
   registrationPayload?: IRegisterPatientPayload;
   expirationSeconds?: number;
+  oneTimePass?: string;
 }) => {
   const { otpFor, userEmail, action, registrationPayload, expirationSeconds } =
     otpActionsPayload;
   const key = `${otpFor}:${userEmail}`;
   if (action === Actions.SET_OTP) {
-    const OTP = crypto.randomInt(100000, 1000000).toString();
+    const OTP = otpActionsPayload.oneTimePass
+      ? otpActionsPayload.oneTimePass
+      : crypto.randomInt(100000, 1000000).toString();
 
     await redisClient.set(key, OTP, {
       expiration: {
@@ -59,5 +64,10 @@ export const redisActions = async (otpActionsPayload: {
         value: expirationSeconds ?? 2 * 60,
       },
     });
+  }
+
+  if (action === Actions.TIME_TO_LEAVE) {
+    const TTL = await redisClient.ttl(key);
+    return TTL;
   }
 };
