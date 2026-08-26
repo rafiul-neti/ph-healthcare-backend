@@ -7,26 +7,26 @@ export const getBkashIdToken = async () => {
     const suffixForBkashRefreshToken = "refreshToken";
 
     let bkashIdToken = await redisActions({
-      otpFor: RedisKeyPrefix.BKASH,
-      userEmail: suffixForBkashIdToken,
+      keyPrefix: RedisKeyPrefix.BKASH,
+      keySuffix: suffixForBkashIdToken,
       action: Actions.GET_OTP,
     });
 
     const bkashIdTokenTTL = await redisActions({
-      otpFor: RedisKeyPrefix.BKASH,
-      userEmail: suffixForBkashIdToken,
+      keyPrefix: RedisKeyPrefix.BKASH,
+      keySuffix: suffixForBkashIdToken,
       action: Actions.TIME_TO_LEAVE,
     });
 
     const bkashRefreshToken = await redisActions({
-      otpFor: RedisKeyPrefix.BKASH,
-      userEmail: suffixForBkashRefreshToken,
+      keyPrefix: RedisKeyPrefix.BKASH,
+      keySuffix: suffixForBkashRefreshToken,
       action: Actions.GET_OTP,
     });
 
     const bkashRefreshTokenTTL = await redisActions({
-      otpFor: RedisKeyPrefix.BKASH,
-      userEmail: suffixForBkashRefreshToken,
+      keyPrefix: RedisKeyPrefix.BKASH,
+      keySuffix: suffixForBkashRefreshToken,
       action: Actions.TIME_TO_LEAVE,
     });
 
@@ -72,18 +72,18 @@ export const getBkashIdToken = async () => {
       bkashIdToken = refreshTokenResult.id_token;
 
       await redisActions({
-        otpFor: RedisKeyPrefix.BKASH,
-        userEmail: suffixForBkashIdToken,
+        keyPrefix: RedisKeyPrefix.BKASH,
+        keySuffix: suffixForBkashIdToken,
         action: Actions.SET_OTP,
         oneTimePass: bkashIdToken as string,
         expirationSeconds: 60 * 60,
       });
 
-      return bkashIdToken;
+      return bkashIdToken as string;
     }
 
     if (bkashIdToken) {
-      return bkashIdToken;
+      return bkashIdToken as string;
     }
 
     const response = await fetch(
@@ -108,12 +108,12 @@ export const getBkashIdToken = async () => {
     }
 
     const result = await response.json();
-    bkashIdToken = result.id_token;
+    bkashIdToken = result.id_token as string;
 
     //   set bkash id_token to Redis
     await redisActions({
-      otpFor: RedisKeyPrefix.BKASH,
-      userEmail: suffixForBkashIdToken,
+      keyPrefix: RedisKeyPrefix.BKASH,
+      keySuffix: suffixForBkashIdToken,
       action: Actions.SET_OTP,
       oneTimePass: result.id_token,
       expirationSeconds: 60 * 60, // 1 hour
@@ -121,14 +121,14 @@ export const getBkashIdToken = async () => {
 
     // set bkash refresh_token yo Redis
     await redisActions({
-      otpFor: RedisKeyPrefix.BKASH,
-      userEmail: suffixForBkashRefreshToken,
+      keyPrefix: RedisKeyPrefix.BKASH,
+      keySuffix: suffixForBkashRefreshToken,
       action: Actions.SET_OTP,
       oneTimePass: result.refresh_token,
       expirationSeconds: 60 * 60 * 24 * 28, // 28 days
     });
 
-    return bkashIdToken;
+    return bkashIdToken as string;
   } catch (error: any) {
     throw new Error(
       `${error.message}   -------->>>> Error from bkash getIdTokenMethod.`,

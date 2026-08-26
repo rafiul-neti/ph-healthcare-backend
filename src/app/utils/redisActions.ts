@@ -22,16 +22,21 @@ type OTPAction = (typeof Actions)[keyof typeof Actions];
 type KeyPrefix = (typeof RedisKeyPrefix)[keyof typeof RedisKeyPrefix];
 
 export const redisActions = async (otpActionsPayload: {
-  otpFor: KeyPrefix;
-  userEmail: string;
+  keyPrefix: KeyPrefix;
+  keySuffix: string;
   action: OTPAction;
   registrationPayload?: IRegisterPatientPayload;
   expirationSeconds?: number;
   oneTimePass?: string;
 }) => {
-  const { otpFor, userEmail, action, registrationPayload, expirationSeconds } =
-    otpActionsPayload;
-  const key = `${otpFor}:${userEmail}`;
+  const {
+    keyPrefix,
+    keySuffix,
+    action,
+    registrationPayload,
+    expirationSeconds,
+  } = otpActionsPayload;
+  const key = `${keyPrefix}:${keySuffix}`;
   if (action === Actions.SET_OTP) {
     const OTP = otpActionsPayload.oneTimePass
       ? otpActionsPayload.oneTimePass

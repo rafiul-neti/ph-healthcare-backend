@@ -44,8 +44,8 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
   const expirationSeconds = 60 * 5;
 
   const OTP = await redisActions({
-    otpFor: RedisKeyPrefix.PATIENT_REGISTER_OTP,
-    userEmail: email,
+    keyPrefix: RedisKeyPrefix.PATIENT_REGISTER_OTP,
+    keySuffix: email,
     action: Actions.SET_OTP,
     expirationSeconds,
   });
@@ -58,8 +58,8 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
   };
 
   await redisActions({
-    otpFor: RedisKeyPrefix.PATIENT_REGISTRATION_DATA,
-    userEmail: email,
+    keyPrefix: RedisKeyPrefix.PATIENT_REGISTRATION_DATA,
+    keySuffix: email,
     action: Actions.SET_REGISTRATION_PAYLOAD,
     registrationPayload: redisUserDataPayload,
     expirationSeconds,
@@ -98,8 +98,8 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmail) => {
   }
 
   const OTP = await redisActions({
-    otpFor: RedisKeyPrefix.PATIENT_REGISTER_OTP,
-    userEmail: email,
+    keyPrefix: RedisKeyPrefix.PATIENT_REGISTER_OTP,
+    keySuffix: email,
     action: Actions.GET_OTP,
   });
 
@@ -108,14 +108,14 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmail) => {
   }
 
   await redisActions({
-    otpFor: RedisKeyPrefix.PATIENT_REGISTER_OTP,
-    userEmail: email,
+    keyPrefix: RedisKeyPrefix.PATIENT_REGISTER_OTP,
+    keySuffix: email,
     action: Actions.DEL_OTP,
   });
 
   const getPatientDataFromRedis = await redisActions({
-    otpFor: RedisKeyPrefix.PATIENT_REGISTRATION_DATA,
-    userEmail: email,
+    keyPrefix: RedisKeyPrefix.PATIENT_REGISTRATION_DATA,
+    keySuffix: email,
     action: Actions.GET_OTP,
   });
 
@@ -149,8 +149,8 @@ const verifyPatientEmail = async (payload: IVerifyPatientEmail) => {
   });
 
   await redisActions({
-    otpFor: RedisKeyPrefix.PATIENT_REGISTRATION_DATA,
-    userEmail: email,
+    keyPrefix: RedisKeyPrefix.PATIENT_REGISTRATION_DATA,
+    keySuffix: email,
     action: Actions.DEL_OTP,
   });
 
@@ -489,8 +489,8 @@ const forgotPassword = async (payload: TForgotPassword) => {
   }
 
   const setOTPToRedis = await redisActions({
-    otpFor: "forgot-password-OTP",
-    userEmail: email,
+    keyPrefix: "forgot-password-OTP",
+    keySuffix: email,
     action: Actions.SET_OTP,
   });
 
@@ -544,8 +544,8 @@ const resetPassword = async (payload: TResetPassword) => {
   }
 
   const OTP = await redisActions({
-    otpFor,
-    userEmail: email,
+    keyPrefix: otpFor,
+    keySuffix: email,
     action: Actions.GET_OTP,
   });
 
@@ -563,7 +563,11 @@ const resetPassword = async (payload: TResetPassword) => {
     data: { password: hashedNewPassword },
   });
 
-  await redisActions({ otpFor, userEmail: email, action: Actions.DEL_OTP });
+  await redisActions({
+    keyPrefix: otpFor,
+    keySuffix: email,
+    action: Actions.DEL_OTP,
+  });
 
   const templatePath = path.join(
     process.cwd(),
