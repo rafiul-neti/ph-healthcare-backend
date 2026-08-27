@@ -16,6 +16,7 @@ export const RedisKeyPrefix = {
   FORGOT_PASSWORD_OTP: "forgot-password-OTP",
   RESET_PASSWORD_OTP: "reset-password-OTP",
   BKASH: "bkash",
+  DOCTOR_APPLICATION: "doctor-application",
 } as const;
 
 type OTPAction = (typeof Actions)[keyof typeof Actions];

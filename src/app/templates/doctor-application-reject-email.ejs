@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Doctor Application Update</title>
+  </head>
+
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8fb;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1f2937;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      style="background-color: #f4f8fb; padding: 40px 16px;"
+    >
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            style="
+              max-width: 520px;
+              background-color: #ffffff;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                style="
+                  background-color: #0f766e;
+                  padding: 32px;
+                  text-align: center;
+                "
+              >
+                <h1
+                  style="
+                    margin: 0;
+                    color: #ffffff;
+                    font-size: 28px;
+                    font-weight: 700;
+                  "
+                >
+                  PH Healthcare
+                </h1>
+
+                <p
+                  style="
+                    margin: 8px 0 0;
+                    color: #d1fae5;
+                    font-size: 14px;
+                  "
+                >
+                  Your healthcare, made simpler.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding: 36px 32px;">
+                <div
+                  style="
+                    width: 64px;
+                    height: 64px;
+                    margin: 0 auto 20px;
+                    background-color: #fef3c7;
+                    border-radius: 50%;
+                    text-align: center;
+                    line-height: 64px;
+                    color: #b45309;
+                    font-size: 30px;
+                    font-weight: 700;
+                  "
+                >
+                  !
+                </div>
+
+                <h2
+                  style="
+                    margin: 0 0 18px;
+                    color: #111827;
+                    font-size: 22px;
+                    text-align: center;
+                  "
+                >
+                  Application Update
+                </h2>
+
+                <p
+                  style="
+                    margin: 0 0 16px;
+                    font-size: 15px;
+                    line-height: 1.6;
+                  "
+                >
+                  Dear Dr. <%= name %>,
+                </p>
+
+                <p
+                  style="
+                    margin: 0 0 18px;
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: #4b5563;
+                  "
+                >
+                  Thank you for your interest in joining PH Healthcare
+                  as a doctor.
+                </p>
+
+                <p
+                  style="
+                    margin: 0 0 24px;
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: #4b5563;
+                  "
+                >
+                  After carefully reviewing your application, we're
+                  sorry to inform you that your application has not
+                  been approved at this time.
+                </p>
+
+                <% if (rejectionReason) { %>
+                  <!-- Rejection Reason -->
+                  <table
+                    role="presentation"
+                    width="100%"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    style="margin-bottom: 24px;"
+                  >
+                    <tr>
+                      <td
+                        style="
+                          background-color: #fff7ed;
+                          border: 1px solid #fed7aa;
+                          border-radius: 8px;
+                          padding: 18px;
+                        "
+                      >
+                        <p
+                          style="
+                            margin: 0 0 8px;
+                            color: #9a3412;
+                            font-size: 14px;
+                            font-weight: 700;
+                          "
+                        >
+                          Reason for the decision
+                        </p>
+
+                        <p
+                          style="
+                            margin: 0;
+                            color: #7c2d12;
+                            font-size: 14px;
+                            line-height: 1.6;
+                          "
+                        >
+                          <%= rejectionReason %>
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                <% } %>
+
+                <p
+                  style="
+                    margin: 0 0 16px;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    color: #6b7280;
+                  "
+                >
+                  We understand that this may be disappointing, and
+                  we appreciate the time and effort you put into your
+                  application.
+                </p>
+
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    color: #6b7280;
+                  "
+                >
+                  Thank you for your interest in PH Healthcare.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                style="
+                  background-color: #f8fafc;
+                  padding: 20px 32px;
+                  text-align: center;
+                  border-top: 1px solid #e5e7eb;
+                "
+              >
+                <p
+                  style="
+                    margin: 0;
+                    color: #94a3b8;
+                    font-size: 12px;
+                    line-height: 1.5;
+                  "
+                >
+                  This is an automated email from PH Healthcare.
+                  Please do not reply to this email.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
