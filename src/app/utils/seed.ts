@@ -127,7 +127,7 @@ export const seedTesterDoctor = async () => {
             experienceYears: 4,
             licenseNumber: "BMDC014582365",
             qualifications: "FCPS",
-            speicialization: "Neurology",
+            specialization: "Neurology",
           },
         },
       },

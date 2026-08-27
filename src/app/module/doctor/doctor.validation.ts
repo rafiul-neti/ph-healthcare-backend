@@ -13,7 +13,7 @@ export const ApplyAsDoctorValidationZodSchema = z.object({
       .trim()
       .min(5, "Address must be at least 5 characters long")
       .optional(),
-    speicialization: z.string().trim().min(2, "Specialization is required"),
+    specialization: z.string().trim().min(2, "Specialization is required"),
     licenseNumber: z.string().trim().min(3, "License number is required"),
     qualifications: z.string().trim().min(2, "Qualifications are required"),
 

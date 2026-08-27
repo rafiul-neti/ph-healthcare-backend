@@ -2,7 +2,7 @@ model Doctor {
   id String @id @default(uuid())
 
   email           String @unique
-  speicialization String
+  specialization String
   licenseNumber   String @unique
   qualifications  String
   experienceYears Int?

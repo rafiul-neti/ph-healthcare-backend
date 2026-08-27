@@ -1,4 +1,5 @@
 import type { DoctorVerificationStatus } from "../../../generated/prisma/enums";
+import type { IQuery } from "../../interfaces";
 
 export interface IAdditionalFile {
 	url: string;
@@ -15,7 +16,7 @@ export interface ICreateDoctorUser {
 }
 
 export interface IDoctorUserInfo {
-	speicialization: string;
+	specialization: string;
 	licenseNumber: string;
 	qualifications: string;
 	experienceYears?: number;
@@ -41,4 +42,10 @@ export interface IApproveDoctorPayload {
 	doctorId: string;
 	verificationStatus: DoctorVerificationStatus;
 	rejectionReason?: string;
+}
+
+export interface IGetAllDoctorsQuery extends IQuery {
+	specialization?: string;
+	email?: string;
+	verificationStatus?: DoctorVerificationStatus;
 }

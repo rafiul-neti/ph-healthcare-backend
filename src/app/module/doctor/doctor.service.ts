@@ -6,6 +6,7 @@ import {
 	DoctorVerificationStatus,
 	Role,
 } from "../../../generated/prisma/enums";
+import type { DoctorWhereInput } from "../../../generated/prisma/models";
 import config from "../../config";
 import { cloudinary } from "../../lib/cloudinary";
 import { transporter } from "../../lib/nodemailer";
@@ -19,6 +20,7 @@ import type { IRequestUser } from "../auth/auth.interface";
 import type {
 	IApplyDoctor,
 	IApproveDoctorPayload,
+	IGetAllDoctorsQuery,
 	IVerifyDoctorEmailPayload,
 } from "./doctor.interface";
 
@@ -261,8 +263,81 @@ const approveDoctor = async (
 	return updateDoctor;
 };
 
+// have to add search, sort, pagination
+const getAllDoctors = async (query: IGetAllDoctorsQuery) => {
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
+	const sortBy = query.sortBy ? query.sortBy : "createdAt";
+	const sortOrder = query.sortOrder ? query.sortOrder : "desc";
+
+	const andCondition: DoctorWhereInput[] = [];
+
+	// handling search
+	if (query.searchTerm) {
+		andCondition.push({
+			OR: [
+				{ email: { contains: query.searchTerm, mode: "insensitive" } },
+				{
+					specialization: { contains: query.searchTerm, mode: "insensitive" },
+				},
+			],
+		});
+	}
+
+	// handle filtering
+	if (query.specialization) {
+		andCondition.push({
+			specialization: { contains: query.specialization, mode: "insensitive" },
+		});
+	}
+
+	if (query.email) {
+		andCondition.push({
+			email: { contains: query.email, mode: "insensitive" },
+		});
+	}
+
+	if (query.verificationStatus) {
+		andCondition.push({
+			verificatonStatus: query.verificationStatus,
+		});
+	}
+
+	andCondition.push({ isDeleted: false });
+
+	const allDoctors = await prisma.doctor.findMany({
+		where: { AND: andCondition ?? undefined },
+		take: limit,
+		skip,
+		orderBy: { [sortBy]: sortOrder },
+		include: {
+			user: { omit: { password: true } },
+
+			// schedules: true,
+			// appointments: true,
+			// prescriptions: true
+		},
+	});
+
+	const countTotalDoctors = await prisma.doctor.count({
+		where: { AND: andCondition },
+	});
+
+	return {
+		data: allDoctors,
+		meta: {
+			page,
+			limit,
+			total: countTotalDoctors,
+			totalPages: Math.ceil(countTotalDoctors / limit),
+		},
+	};
+};
+
 export const DoctorService = {
 	applyAsDoctor,
 	verifyDoctorEmail,
 	approveDoctor,
+	getAllDoctors,
 };
