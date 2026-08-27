@@ -1,6 +1,9 @@
 model Appointment {
     id String @id @default(uuid())
 
+    userId String
+    user User @relation(fields: [userId], references: [id])
+
     status AppointmentStatus @default(PENDING)
 
     payment Payment?

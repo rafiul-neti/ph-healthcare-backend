@@ -17,6 +17,8 @@ model User {
   updatedAt          DateTime   @updatedAt
   patient            Patient?
 
+  appointments Appointment[]
+
   @@unique([email])
   @@map("users")
 }

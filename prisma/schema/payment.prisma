@@ -1,13 +1,13 @@
 model Payment {
     id String @id @default(uuid())
 
-    status PaymentStatus @default(UNPAID)
-    amount Decimal @db.Decimal(10, 2)
+    status PaymentStatus @default(PROCESSING)
+    amount Decimal? @db.Decimal(10, 2)
 
     paymentGateway String @default("bkash")
-    merchantInvoiceNumber String @unique // appointment_id
+    merchantInvoiceNumber String? @unique // appointment_id
 
-    bkashPaymentId String?
+    bkashPaymentId String? @unique
     bkashTrxId String?
     payerReference String?
     paidAt String?
