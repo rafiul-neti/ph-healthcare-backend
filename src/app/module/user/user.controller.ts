@@ -1,12 +1,13 @@
 import type { Request, Response } from "express";
+import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from "http-status";
+import { AppError } from "../../utils/AppError";
 import { UserService } from "./user.service";
 
 const uploadProfileImage = catchAsync(async (req: Request, res: Response) => {
   if (!req.file) {
-    throw new Error("No file provided!");
+    throw new AppError(httpStatus.BAD_REQUEST, "No file provided!");
   }
 
   const result = await UserService.uploadProfileImage(

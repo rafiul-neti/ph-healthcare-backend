@@ -20,6 +20,7 @@ router.post(
 	DoctorController.verifyDoctorEmail,
 );
 
+// admin only routes
 router.post(
 	"/approve-doctor",
 	auth(Role.ADMIN, Role.SUPER_ADMIN),

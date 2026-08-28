@@ -2,6 +2,8 @@ import { Role } from "../../generated/prisma/enums";
 import config from "../config";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
+import httpStatus from "http-status";
+import { AppError } from "../utils/AppError";
 
 export const seedSuperAdmin = async () => {
   try {
@@ -17,7 +19,10 @@ export const seedSuperAdmin = async () => {
     }
 
     if (!config.super_admin_email || !config.seed_password) {
-      throw new Error("Email or password missing: seeding super admin!");
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Email or password missing: seeding super admin!",
+      );
     }
 
     const hashedPassword = await bcrypt.hash(
@@ -61,7 +66,10 @@ export const seedTesterAdmin = async () => {
     }
 
     if (!config.tester_admin_email || !config.seed_password) {
-      throw new Error("Email or password missing: seeding tester admin!");
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Email or password missing: seeding tester admin!",
+      );
     }
 
     const hashedPassword = await bcrypt.hash(
@@ -105,7 +113,10 @@ export const seedTesterDoctor = async () => {
     }
 
     if (!config.tester_doctor_email || !config.seed_password) {
-      throw new Error("Email or password missing: seeding tester doctor!");
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Email or password missing: seeding tester doctor!",
+      );
     }
 
     const hashedPassword = await bcrypt.hash(

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import httpStatus from "http-status";
 import {
   AppointmentStatus,
   PaymentStatus,
@@ -6,12 +7,14 @@ import {
 import config from "../../config";
 import { getBkashIdToken } from "../../lib/bkash";
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import type { IRequestUser } from "../auth/auth.interface";
 
 const bookAppointment = async (payload: any, user: IRequestUser) => {
   const bkashIdToken = await getBkashIdToken();
   if (!bkashIdToken) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.SERVICE_UNAVAILABLE,
       "Failed to get bkash id_token: getting bkashIdToken from bookAppointment in appointment service.",
     );
   }
@@ -41,7 +44,8 @@ const bookAppointment = async (payload: any, user: IRequestUser) => {
   );
 
   if (!bkashCreatePaymentResponse.ok) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
       "Failed to create bKash payment intent: in bookAppointment at appointment.service",
     );
   }
@@ -85,7 +89,7 @@ const payForAppointment = async (
   });
 
   if (!existingAppointment) {
-    throw new Error("Appointment does not exist!");
+    throw new AppError(httpStatus.NOT_FOUND, "Appointment does not exist!");
   }
 
   const pendingStatuses: AppointmentStatus[] = [
@@ -94,13 +98,17 @@ const payForAppointment = async (
   ];
 
   if (!pendingStatuses.includes(existingAppointment.status)) {
-    throw new Error("Appointment is already paid and confirmed!");
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "Appointment is already paid and confirmed!",
+    );
   }
 
   // re-create the payment
   const bkashIdToken = await getBkashIdToken();
   if (!bkashIdToken) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.SERVICE_UNAVAILABLE,
       "Failed to get bkash id_token: getting bkashIdToken from payForAppointment in appointment service.",
     );
   }
@@ -128,7 +136,8 @@ const payForAppointment = async (
   );
 
   if (!bkashCreatePaymentResponse.ok) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
       "Failed to create bKash payment intent: in bookAppointment at appointment.service",
     );
   }
@@ -150,17 +159,20 @@ const payForAppointment = async (
 const bookAppointmentCallback = async (query: Record<string, any>) => {
   const paymentId = query.paymentID;
   if (!paymentId) {
-    throw new Error("Payment ID is missing!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Payment ID is missing!");
   }
 
   const status = query.status;
   if (!status) {
-    throw new Error("Payment status is missing!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Payment status is missing!");
   }
 
   const bkashIdToken = await getBkashIdToken();
   if (!bkashIdToken) {
-    throw new Error("BKash Access Token not found!");
+    throw new AppError(
+      httpStatus.SERVICE_UNAVAILABLE,
+      "BKash Access Token not found!",
+    );
   }
 
   const executedPaymentResponse = await fetch(
@@ -178,7 +190,8 @@ const bookAppointmentCallback = async (query: Record<string, any>) => {
   );
 
   if (!executedPaymentResponse.ok) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
       "Failed to execute bKash payment: in bookAppointmentCallback at appointment.service",
     );
   }
@@ -197,7 +210,8 @@ const bookAppointmentCallback = async (query: Record<string, any>) => {
     });
 
     if (!appointment.payment?.id) {
-      throw new Error(
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
         `No payment record found for appointment ${appointment.id}`,
       );
     }
@@ -266,7 +280,10 @@ const cancelAppointmentAndGetRefunded = async (
 
   const bkashIdToken = await getBkashIdToken();
   if (!bkashIdToken) {
-    throw new Error("BKash Access Token not found!");
+    throw new AppError(
+      httpStatus.SERVICE_UNAVAILABLE,
+      "BKash Access Token not found!",
+    );
   }
 
   const updateResult = await prisma.appointment.updateMany({
@@ -285,23 +302,31 @@ const cancelAppointmentAndGetRefunded = async (
     });
 
     if (!appointment) {
-      throw new Error("Appointment does not exist!");
+      throw new AppError(httpStatus.NOT_FOUND, "Appointment does not exist!");
     }
     if (appointment.userId !== user.userId) {
-      throw new Error("You are not authorized to cancel this appointment!");
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not authorized to cancel this appointment!",
+      );
     }
     if (appointment.status === AppointmentStatus.CANCELLED) {
-      throw new Error("Appointment is already cancelled!");
+      throw new AppError(
+        httpStatus.CONFLICT,
+        "Appointment is already cancelled!",
+      );
     }
     if (
       appointment.status === AppointmentStatus.PENDING ||
       appointment.status === AppointmentStatus.INITIATED
     ) {
-      throw new Error(
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
         "This appointment has no completed payment — use the standard cancellation instead.",
       );
     }
-    throw new Error(
+    throw new AppError(
+      httpStatus.CONFLICT,
       `Appointment is ${appointment.status.toLowerCase()} and can't be cancelled!`,
     );
   }
@@ -346,7 +371,8 @@ const cancelAppointmentAndGetRefunded = async (
       data: { status: AppointmentStatus.CONFIRMED },
     });
 
-    throw new Error(
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
       "Failed to execute bKash refund: in cancelAndRefundAppointment at appointment.service",
     );
   }

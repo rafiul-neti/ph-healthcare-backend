@@ -1,5 +1,7 @@
 import config from "../config";
+import httpStatus from "http-status";
 import { Actions, redisActions, RedisKeyPrefix } from "../utils/redisActions";
+import { AppError } from "../utils/AppError";
 
 export const getBkashIdToken = async () => {
   try {
@@ -64,7 +66,10 @@ export const getBkashIdToken = async () => {
       );
 
       if (!refreshTokenResponse.ok) {
-        throw new Error("Failed to get a new id_toke: using refresh_token!");
+        throw new AppError(
+          httpStatus.BAD_GATEWAY,
+          "Failed to get a new id_toke: using refresh_token!",
+        );
       }
 
       const refreshTokenResult = await refreshTokenResponse.json();
@@ -104,7 +109,10 @@ export const getBkashIdToken = async () => {
     );
 
     if (!response.ok) {
-      throw new Error("bKash Access Token Grant Failed!");
+      throw new AppError(
+        httpStatus.BAD_GATEWAY,
+        "bKash Access Token Grant Failed!",
+      );
     }
 
     const result = await response.json();
@@ -130,7 +138,8 @@ export const getBkashIdToken = async () => {
 
     return bkashIdToken as string;
   } catch (error: any) {
-    throw new Error(
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
       `${error.message}   -------->>>> Error from bkash getIdTokenMethod.`,
     );
   }
