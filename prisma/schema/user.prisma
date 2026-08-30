@@ -18,8 +18,6 @@ model User {
   patient            Patient?
   doctor             Doctor?
 
-  appointments Appointment[]
-
   @@unique([email])
   @@map("users")
 }

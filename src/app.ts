@@ -7,13 +7,14 @@ import express, {
 } from "express";
 import httpStatus from "http-status";
 import config from "./app/config";
+import { getBkashIdToken } from "./app/lib/bkash";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
-import { AuthRoutes } from "./app/module/auth/auth.route";
-import { UserRoutes } from "./app/module/user/user.route";
-import { getBkashIdToken } from "./app/lib/bkash";
 import { AppointmentRoutes } from "./app/module/appointment/appointment.route";
+import { AuthRoutes } from "./app/module/auth/auth.route";
 import { DoctorRoutes } from "./app/module/doctor/doctor.route";
+import { UserRoutes } from "./app/module/user/user.route";
+import { ScheduleRoutes } from "./app/module/schedule/schedule.route";
 
 const app: Application = express();
 
@@ -35,6 +36,7 @@ app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/appointment", AppointmentRoutes);
 app.use("/api/v1/doctor", DoctorRoutes);
+app.use("/api/v1/schedule", ScheduleRoutes)
 
 app.get("/test", async (req: Request, res: Response) => {
   try {

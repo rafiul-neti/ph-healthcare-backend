@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import { RedisKeyPrefix } from "../../utils/redisActions";
 
 const PatientRegistrationZodSchema = z.object({
@@ -63,7 +63,8 @@ export const AuthValidationSchemas = {
   PatientRegistrationZodSchema,
   LoginZodSchema,
   ForgotPasswordSchema,
-  ResetPasswordSchema, VerifyEmailShema
+  ResetPasswordSchema,
+  VerifyEmailShema,
 };
 
 // ! infering types by schemas above
