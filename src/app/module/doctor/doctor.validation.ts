@@ -29,7 +29,7 @@ export const ApplyAsDoctorValidationZodSchema = z.object({
       .max(1000, "Bio cannot exceed 1000 characters")
       .optional(),
     // Handles converting incoming FormData strings like "150.00" into a float number
-    consultationFee: z
+    consultationFee: z.coerce
       .number()
       .min(0, "Consultation fee cannot be negative")
       .optional(),
@@ -39,4 +39,27 @@ export const ApplyAsDoctorValidationZodSchema = z.object({
       .min(5, "Contact number is invalid")
       .optional(),
   }),
+});
+
+export const UpdateDoctorProfileValidationSchema = z.object({
+  address: z
+    .string()
+    .trim()
+    .min(5, "Address must be at least 5 characters long")
+    .optional(),
+
+  bio: z
+    .string()
+    .trim()
+    .max(1000, "Bio cannot exceed 1000 characters")
+    .optional(),
+  consultationFee: z.coerce
+    .number()
+    .min(0, "Consultation fee cannot be negative")
+    .optional(),
+  contactNumber: z
+    .string()
+    .trim()
+    .min(5, "Contact number is invalid")
+    .optional(),
 });
