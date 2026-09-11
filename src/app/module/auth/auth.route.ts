@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { Role } from "../../../generated/prisma/enums";
 import { auth } from "../../middleware/checkAuth";
-import { AuthController } from "./auth.controller";
 import { validateRequest } from "../../middleware/validateRequest";
+import { AuthController } from "./auth.controller";
 import { AuthValidationSchemas } from "./auth.validation";
 
 const router = Router();
@@ -40,5 +40,7 @@ router.post(
   validateRequest(AuthValidationSchemas.ResetPasswordSchema),
   AuthController.resetPassword,
 );
+
+router.post("/logout", AuthController.logout);
 
 export const AuthRoutes = router;

@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
+import { AppError } from "../../utils/AppError";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { AppError } from "../../utils/AppError";
 import { UserService } from "./user.service";
 
 const uploadProfileImage = catchAsync(async (req: Request, res: Response) => {

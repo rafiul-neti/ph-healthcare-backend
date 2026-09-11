@@ -1,0 +1,1157 @@
+{
+  "info": {
+    "_postman_id": "1253e57d-e5bd-4716-ac37-bb3e609a38bd",
+    "name": "PH-Healthcare",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56223946",
+    "_collection_link": "https://go.postman.co/collection/56223946-1253e57d-e5bd-4716-ac37-bb3e609a38bd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register a Patient",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Patient-01\",\n    \"email\": \"patient01@example.com\",\n    \"password\": \"P@s$w0Rd123\",\n    \"patient\": {\n        \"contactNumber\": \"01642458232\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email (Patient)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"patient01@example.com\",\n    \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/verify-email",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "verify-email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"patient01@example.com\",\n    \"password\": \"P@s$w0Rd123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me (My Profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/me",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/refresh-token",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "refresh-token"]
+            },
+            "description": "Refresh token is sent automatically via HttpOnly cookie set during login."
+          },
+          "response": []
+        },
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"idToken\": \"<google-oauth-id-token-here>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/google",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "google"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"patient01@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/forgot-password",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "forgot-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"patient01@example.com\",\n    \"newPassword\": \"N3wP@s$w0Rd\",\n    \"otp\": \"123456\",\n    \"otpFor\": \"forgot-password-OTP\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/reset-password",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "reset-password"]
+            },
+            "description": "otpFor must be one of: patient-register-OTP, patient-registration-data, forgot-password-OTP, reset-password-OTP, bkash, doctor-application"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "src": "/path/to/your/image.jpg",
+                  "description": "Profile image file (jpg, png, etc.)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/user/profile-image",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "user", "profile-image"]
+            },
+            "description": "Requires authentication. Accepts any role: ADMIN, DOCTOR, PATIENT, SUPER_ADMIN."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Doctor",
+      "item": [
+        {
+          "name": "Apply As Doctor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": "/path/to/resume.pdf",
+                  "description": "Doctor's resume (PDF, max 1 file)"
+                },
+                {
+                  "key": "additionalFiles",
+                  "type": "file",
+                  "src": "/path/to/certificate.pdf",
+                  "description": "Additional documents (max 5 files)"
+                },
+                {
+                  "key": "data",
+                  "value": "{\n  \"user\": {\n    \"name\": \"Dr. Tanvir Ahmed\",\n    \"email\": \"dr.tanvir@example.com\",\n    \"role\": \"DOCTOR\"\n  },\n  \"doctor\": {\n    \"specialization\": \"Pediatrics\",\n    \"licenseNumber\": \"BMDC-A-54321\",\n    \"qualifications\": \"MBBS, DCH\",\n    \"experienceYears\": 5,\n    \"bio\": \"Dedicated pediatrician committed to infant and child healthcare.\",\n    \"consultationFee\": 800,\n    \"contactNumber\": \"+8801800000001\",\n    \"address\": \"123 Main Street, Dhaka\"\n  }\n}",
+                  "type": "text",
+                  "description": "JSON string with user and doctor fields"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/apply-as-doctor",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "apply-as-doctor"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Doctor Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"dr.tanvir@example.com\",\n    \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/apply-as-doctor/verify-email",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "apply-as-doctor", "verify-email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Doctor (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"doctorId\": \"<doctor-uuid-here>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/approve-doctor",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "approve-doctor"]
+            },
+            "description": "Requires ADMIN or SUPER_ADMIN role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Doctors (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/all-doctors?page=1&limit=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "all-doctors"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Requires ADMIN or SUPER_ADMIN role."
+          },
+          "response": []
+        },
+        {
+          "name": "Update My Doctor Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"address\": \"456 Hospital Road, Chittagong\",\n    \"bio\": \"Experienced pediatrician with 7+ years in child care.\",\n    \"consultationFee\": 1000,\n    \"contactNumber\": \"+8801800000002\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/update-my-profile",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "update-my-profile"]
+            },
+            "description": "Requires DOCTOR role. All fields are optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Doctors Today (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/public/available-today",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "public", "available-today"]
+            },
+            "description": "Public endpoint - no authentication required."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Doctors (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/public/all-doctors?page=1&limit=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "public", "all-doctors"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Public endpoint - no authentication required."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Doctor Profile (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/public/<doctorId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "doctor", "public", "<doctorId>"]
+            },
+            "description": "Public endpoint - no authentication required. Replace <doctorId> with a valid UUID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "item": [
+        {
+          "name": "Create Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"startDateTime\": \"2026-09-10T09:00:00.000Z\",\n    \"endDateTime\": \"2026-09-10T09:30:00.000Z\",\n    \"meetingLink\": \"https://meet.google.com/abc-defg-hij\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/create-schedule",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "schedule", "create-schedule"]
+            },
+            "description": "Requires DOCTOR role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Schedules (Doctor)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/my-schedules?page=1&limit=10&staus=PUBLISHED",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "schedule", "my-schedules"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                {
+                  "key": "staus",
+                  "value": "PUBLISHED",
+                  "description": "DRAFT | PUBLISHED | CANCELLED"
+                }
+              ]
+            },
+            "description": "Requires DOCTOR role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Schedules (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/all-schedules?page=1&limit=10&doctorId=<doctorId>&staus=PUBLISHED",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "schedule", "all-schedules"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                {
+                  "key": "doctorId",
+                  "value": "<doctorId>",
+                  "description": "Optional: filter by doctor UUID"
+                },
+                {
+                  "key": "staus",
+                  "value": "PUBLISHED",
+                  "description": "DRAFT | PUBLISHED | CANCELLED",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Requires ADMIN or SUPER_ADMIN role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Schedule By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/<scheduleId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "schedule", "<scheduleId>"]
+            },
+            "description": "Requires DOCTOR, ADMIN, or SUPER_ADMIN role. Replace <scheduleId> with a valid UUID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Today's Schedules (Patient)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/todays-schedule?doctorId=<doctorId>&page=1&limit=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "schedule", "todays-schedule"],
+              "query": [
+                {
+                  "key": "doctorId",
+                  "value": "<doctorId>",
+                  "description": "Required: UUID of the doctor"
+                },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Requires PATIENT role. Returns today's available schedule slots for a specific doctor."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Schedule",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"startDateTime\": \"2026-09-10T10:00:00.000Z\",\n    \"endDateTime\": \"2026-09-10T10:30:00.000Z\",\n    \"meetingLink\": \"https://meet.google.com/xyz-abcd-efg\",\n    \"staus\": \"PUBLISHED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/update-schedule/<scheduleId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "update-schedule",
+                "<scheduleId>"
+              ]
+            },
+            "description": "Requires DOCTOR role. All fields optional. staus: DRAFT | PUBLISHED | CANCELLED"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Schedule",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/<scheduleId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "schedule", "<scheduleId>"]
+            },
+            "description": "Requires DOCTOR role. Replace <scheduleId> with a valid UUID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Appointment",
+      "item": [
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"scheduleId\": \"<schedule-uuid-here>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/book-appointment",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "appointment", "book-appointment"]
+            },
+            "description": "Requires PATIENT role. Initiates bKash payment flow. Returns a payment URL."
+          },
+          "response": []
+        },
+        {
+          "name": "Book Appointment Payment Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/book-appointment/payment/callback?paymentID=<paymentID>&status=success",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "appointment",
+                "book-appointment",
+                "payment",
+                "callback"
+              ],
+              "query": [
+                {
+                  "key": "paymentID",
+                  "value": "<paymentID>",
+                  "description": "bKash payment ID returned from the payment gateway"
+                },
+                {
+                  "key": "status",
+                  "value": "success",
+                  "description": "success | failure | cancel"
+                }
+              ]
+            },
+            "description": "Called automatically by bKash payment gateway after payment. No authentication required."
+          },
+          "response": []
+        },
+        {
+          "name": "Recreate Appointment Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"appointmentId\": \"<appointment-uuid-here>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/recreate-appointment-payment",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "appointment",
+                "recreate-appointment-payment"
+              ]
+            },
+            "description": "Requires PATIENT role. Use when the original payment failed or was cancelled."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Appointment and Get Refunded",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"appointmentId\": \"<appointment-uuid-here>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/cancel-appointment",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "appointment", "cancel-appointment"]
+            },
+            "description": "Requires PATIENT, ADMIN, or SUPER_ADMIN role. Cancels appointment and initiates bKash refund."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Appointment Status (Doctor)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"ONGOING\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/update-status/<appointmentId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "appointment",
+                "update-status",
+                "<appointmentId>"
+              ]
+            },
+            "description": "Requires DOCTOR role. status must be ONGOING or COMPLETED."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Appointments (Patient)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/my-appointments?page=1&limit=10&status=CONFIRMED",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "appointment", "my-appointments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                {
+                  "key": "status",
+                  "value": "CONFIRMED",
+                  "description": "INITIATED | PENDING | CONFIRMED | ONGOING | COMPLETED | CANCELLED",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Requires PATIENT role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/doctor-appointments?page=1&limit=10&status=CONFIRMED",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "appointment", "doctor-appointments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                {
+                  "key": "status",
+                  "value": "CONFIRMED",
+                  "description": "INITIATED | PENDING | CONFIRMED | ONGOING | COMPLETED | CANCELLED",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Requires DOCTOR role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Appointment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/<appointmentId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "appointment", "<appointmentId>"]
+            },
+            "description": "Requires PATIENT, DOCTOR, ADMIN, or SUPER_ADMIN role."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Get My Payments (Patient)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payment/my-payments?page=1&limit=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "payment", "my-payments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Requires PATIENT role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Payments (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payment/all-payments?page=1&limit=10&patientEmail=patient01@example.com",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "payment", "all-payments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                {
+                  "key": "patientEmail",
+                  "value": "patient01@example.com",
+                  "description": "Optional: filter by patient email",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Requires ADMIN or SUPER_ADMIN role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payment/<paymentId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "payment", "<paymentId>"]
+            },
+            "description": "Requires PATIENT, ADMIN, or SUPER_ADMIN role. Replace <paymentId> with a valid UUID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Prescription",
+      "item": [
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"appointmentId\": \"<appointment-uuid-here>\",\n    \"findings\": \"Patient presents with mild fever and sore throat. No sign of bacterial infection.\",\n    \"medicines\": [\n        {\n            \"name\": \"Paracetamol 500mg\",\n            \"dosage\": \"1 tablet\",\n            \"duration\": \"5 days\",\n            \"instructions\": \"Take after meals, 3 times a day\"\n        },\n        {\n            \"name\": \"Vitamin C 1000mg\",\n            \"dosage\": \"1 tablet\",\n            \"duration\": \"7 days\",\n            \"instructions\": \"Take once daily in the morning\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/prescription/create-prescription",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "prescription", "create-prescription"]
+            },
+            "description": "Requires DOCTOR role. The appointment must be in ONGOING or COMPLETED status."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Prescription By Appointment ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/prescription/<appointmentId>",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "prescription", "<appointmentId>"]
+            },
+            "description": "Requires PATIENT, DOCTOR, ADMIN, or SUPER_ADMIN role. Replace <appointmentId> with a valid UUID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Patient Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/analytics/patient-analytics",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "analytics", "patient-analytics"]
+            },
+            "description": "Requires PATIENT role. Returns appointment counts, payment totals, etc."
+          },
+          "response": []
+        },
+        {
+          "name": "Doctor Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/analytics/doctor-analytics",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "analytics", "doctor-analytics"]
+            },
+            "description": "Requires DOCTOR role. Returns appointment stats, earnings, schedule overview, etc."
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/analytics/admin-analytics",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "analytics", "admin-analytics"]
+            },
+            "description": "Requires ADMIN or SUPER_ADMIN role. Returns platform-wide stats."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string",
+      "description": "JWT access token obtained from the Login endpoint"
+    }
+  ]
+}
