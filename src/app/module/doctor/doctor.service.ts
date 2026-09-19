@@ -15,6 +15,7 @@ import { cloudinary } from "../../lib/cloudinary";
 import { transporter } from "../../lib/nodemailer";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
+import generateRandomPassword from "../../utils/generateRandomPassword";
 import {
   Actions,
   RedisKeyPrefix,
@@ -94,17 +95,15 @@ const applyAsDoctor = async (
     }),
   );
 
-  console.log(uploadResumeAndGetLink.original_filename, uploadResumeAndGetLink);
-
-  const hashedPassword = await bcrypt.hash(
-    config.seed_password,
-    Number(config.bcrypt_salt_rounds),
-  );
+  // const hashedPassword = await bcrypt.hash(
+  //   config.seed_password,
+  //   Number(config.bcrypt_salt_rounds),
+  // );
 
   const doctorApplication = await prisma.user.create({
     data: {
       ...payload.user,
-      password: hashedPassword,
+      // password: hashedPassword,
       doctor: {
         create: {
           email: payload.user.email,
@@ -245,6 +244,30 @@ const approveDoctor = async (
     );
   }
 
+  if (
+    payload.verificationStatus === DoctorVerificationStatus.REJECTED &&
+    !payload.rejectionReason
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Rejection Reason is required when rejecting a doctor application.",
+    );
+  }
+
+  const isApproved = verificationStatus === DoctorVerificationStatus.APPROVED;
+
+  const randomDoctorPassword = isApproved
+    ? generateRandomPassword()
+    : undefined;
+
+  if (config.node_env === "development" && randomDoctorPassword) {
+    console.log(`[dev] random password plain text: ${randomDoctorPassword}`);
+  }
+
+  const hashedPassword = randomDoctorPassword
+    ? await bcrypt.hash(randomDoctorPassword, Number(config.bcrypt_salt_rounds))
+    : undefined;
+
   const updateDoctor = await prisma.doctor.update({
     where: { id: doctorId },
     data: {
@@ -255,11 +278,12 @@ const approveDoctor = async (
           : null,
       reviewAt: new Date(),
       reviewedBy: reviewer.userId,
+      ...(hashedPassword
+        ? { user: { update: { password: hashedPassword } } }
+        : {}),
     },
     include: { user: { select: { name: true } } },
   });
-
-  const isApproved = verificationStatus === DoctorVerificationStatus.APPROVED;
 
   const templatePath = path.join(
     process.cwd(),
@@ -301,11 +325,14 @@ const getAllDoctors = async (query: IGetAllDoctorsQuery) => {
         {
           specialization: { contains: query.searchTerm, mode: "insensitive" },
         },
+        {
+          user: { name: { contains: query.searchTerm, mode: "insensitive" } },
+        },
       ],
     });
   }
 
-  // handle filtering
+  // handling filtering
   if (query.specialization) {
     andCondition.push({
       specialization: { contains: query.specialization, mode: "insensitive" },

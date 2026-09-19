@@ -4,7 +4,7 @@ export const ApplyAsDoctorValidationZodSchema = z.object({
   user: z.object({
     name: z.string().trim().min(2, "Name must be at least 2 characters long"),
     email: z.email("Invalid email address").trim().toLowerCase(),
-    role: z.literal("DOCTOR"),
+    role: z.literal("DOCTOR", {error: "Role must be 'DOCTOR'"}).optional().default("DOCTOR"),
   }),
 
   doctor: z.object({

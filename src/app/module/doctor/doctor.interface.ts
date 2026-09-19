@@ -16,6 +16,7 @@ export interface ICreateDoctorUser {
 }
 
 export interface IDoctorUserInfo {
+  address?: string;
   specialization: string;
   licenseNumber: string;
   qualifications: string;

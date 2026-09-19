@@ -56,7 +56,7 @@ const approveDoctor = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "Doctor status has been changed.",
+    message: "Doctor application status has been changed.",
     data: result,
   });
 });

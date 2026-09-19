@@ -6,6 +6,7 @@ model Doctor {
   licenseNumber   String @unique
   qualifications  String
   experienceYears Int?
+  address String?
 
   bio             String?
   consultationFee Decimal? @db.Decimal(10, 2)
