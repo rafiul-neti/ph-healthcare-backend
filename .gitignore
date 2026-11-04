@@ -16,3 +16,4 @@ pnpm-workspace.yaml
 git_fingerprint.txt
 
 google_client_secret.json
+.vercel

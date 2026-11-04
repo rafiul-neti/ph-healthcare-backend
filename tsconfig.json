@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "module": "esnext",
-        "moduleResolution": "bundler",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "target": "es2023",
         "rootDir": "./",
         "outDir": "./dist",
@@ -12,5 +12,5 @@
         "ignoreDeprecations": "5.0"
     },
     "include": ["src", "prisma.config.ts"],
-    "exclude": ["node_modules", "dist"]
+    "exclude": ["node_modules", "dist",]
 }
