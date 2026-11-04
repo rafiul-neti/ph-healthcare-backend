@@ -29,6 +29,7 @@ const bookAppointment = async (
   const patient = await prisma.patient.findUnique({
     where: { userId: user.userId },
   });
+
   if (!patient) {
     throw new AppError(httpStatus.NOT_FOUND, "Patient profile not found!");
   }
@@ -67,7 +68,7 @@ const bookAppointment = async (
     );
   }
 
-  if (!isBefore(now, schedule.startDateTime)) {
+  if (!isBefore(schedule.startDateTime, now)) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       "This schedule has not started yet!",
@@ -433,7 +434,7 @@ const bookAppointmentCallback = async (query: Record<string, any>) => {
 
     return {
       executedPaymentResult,
-      redirectURL: `${config.frontend_url}/dashboard/my-appointments?status=success`,
+      redirectURL: `${config.frontend_url}/patient/my-appointments?status=success`,
     };
   }
 
@@ -449,7 +450,7 @@ const bookAppointmentCallback = async (query: Record<string, any>) => {
       });
 
       return {
-        redirectURL: `${config.frontend_url}/dashboard/my-appointments?status=failure`,
+        redirectURL: `${config.frontend_url}/patient/my-appointments?status=failure`,
       };
     }
 
@@ -463,14 +464,14 @@ const bookAppointmentCallback = async (query: Record<string, any>) => {
       });
 
       return {
-        redirectURL: `${config.frontend_url}/dashboard/my-appointments?status=cancel`,
+        redirectURL: `${config.frontend_url}/patient/my-appointments?status=cancel`,
       };
     }
 
     default: {
       return {
         executedPaymentResult,
-        redirectURL: `${config.frontend_url}/dashboard/my-appointments?error=missing-payment-response`,
+        redirectURL: `${config.frontend_url}/patient/my-appointments?error=missing-payment-response`,
       };
     }
   }
@@ -713,8 +714,8 @@ const getMyAppointments = async (
   query: IGetAppointmentsQuery,
   user: IRequestUser,
 ) => {
-  const limit = Number(query.limit) ?? 10;
-  const page = Number(query.page) ?? 1;
+  const limit = Number(query.limit) ? Number(query.limit) : 10;
+  const page = Number(query.page) ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
   const sortBy = query.sortBy ?? "createdAt";
   const sortOrder = query.sortOrder ?? "desc";

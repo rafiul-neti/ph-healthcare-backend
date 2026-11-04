@@ -16,7 +16,7 @@ model Doctor {
   resumePublicId  String?
   additionalFiles Json? //strores [{url: "....", originalName: "...", publicId: "...."}]
 
-  verificatonStatus DoctorVerificationStatus @default(PENDING)
+  verificationStatus DoctorVerificationStatus @default(PENDING)
   rejectionReason   String?
   reviewedBy        String?
   reviewAt          DateTime?

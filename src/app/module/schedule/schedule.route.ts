@@ -36,16 +36,16 @@ router.get(
 );
 
 router.get(
-  "/:scheduleId",
-  auth(Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN),
-  ScheduleController.getScheduleById,
-);
-
-router.get(
   "/todays-schedule",
   auth(Role.PATIENT),
   validateQuery(GetTodaysSchedulesQueryValidationSchema),
   ScheduleController.getTodaysSchedule,
+);
+
+router.get(
+  "/:scheduleId",
+  auth(Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN),
+  ScheduleController.getScheduleById,
 );
 
 router.patch(

@@ -237,10 +237,10 @@ const approveDoctor = async (
     );
   }
 
-  if (isDoctorExists.verificatonStatus !== DoctorVerificationStatus.PENDING) {
+  if (isDoctorExists.verificationStatus !== DoctorVerificationStatus.PENDING) {
     throw new AppError(
       httpStatus.CONFLICT,
-      `Doctor application has already been ${isDoctorExists.verificatonStatus.toLowerCase()}.`,
+      `Doctor application has already been ${isDoctorExists.verificationStatus.toLowerCase()}.`,
     );
   }
 
@@ -271,7 +271,7 @@ const approveDoctor = async (
   const updateDoctor = await prisma.doctor.update({
     where: { id: doctorId },
     data: {
-      verificatonStatus: verificationStatus,
+      verificationStatus,
       rejectionReason:
         verificationStatus === DoctorVerificationStatus.REJECTED
           ? (rejectionReason ?? null)
@@ -347,7 +347,7 @@ const getAllDoctors = async (query: IGetAllDoctorsQuery) => {
 
   if (query.verificationStatus) {
     andCondition.push({
-      verificatonStatus: query.verificationStatus,
+      verificationStatus: query.verificationStatus,
     });
   }
 
@@ -419,7 +419,7 @@ const getAvailableDoctorsByTodaysSchedule = async (
 
   const andConditions: DoctorWhereInput[] = [
     { isDeleted: false },
-    { verificatonStatus: DoctorVerificationStatus.APPROVED },
+    { verificationStatus: DoctorVerificationStatus.APPROVED },
     {
       schedules: {
         some: {
@@ -429,8 +429,8 @@ const getAvailableDoctorsByTodaysSchedule = async (
           startDateTime: {
             gte: startOfToday,
             lt: startOfTommorrow,
-            gt: now,
           },
+          endDateTime: { gt: now },
         },
       },
     },
@@ -474,8 +474,8 @@ const getAvailableDoctorsByTodaysSchedule = async (
           startDateTime: {
             gte: startOfToday,
             lt: startOfTommorrow,
-            gt: now,
           },
+          endDateTime: { gt: now },
         },
         orderBy: { startDateTime: "asc" },
         select: {
@@ -509,7 +509,7 @@ const getAllDoctorsPublicProfile = async (query: IGetAllDoctorsQuery) => {
 
   const andConditions: DoctorWhereInput[] = [
     { isDeleted: false },
-    { verificatonStatus: DoctorVerificationStatus.APPROVED },
+    { verificationStatus: DoctorVerificationStatus.APPROVED },
   ];
 
   if (query.searchTerm) {
@@ -561,7 +561,7 @@ const getSingleDoctorPublicProfile = async (doctorId: string) => {
     where: {
       id: doctorId,
       isDeleted: false,
-      verificatonStatus: DoctorVerificationStatus.APPROVED,
+      verificationStatus: DoctorVerificationStatus.APPROVED,
     },
     select: {
       id: true,

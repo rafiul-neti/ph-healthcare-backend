@@ -1,4 +1,8 @@
+import path from "node:path";
 import bcrypt from "bcryptjs";
+import ejs from "ejs";
+import type { TokenPayload } from "google-auth-library";
+import httpStatus from "http-status";
 import type { JwtPayload, SignOptions } from "jsonwebtoken";
 import {
   AuthProvider,
@@ -6,10 +10,16 @@ import {
   UserStatus,
 } from "../../../generated/prisma/enums";
 import config from "../../config";
+import { googleClient } from "../../lib/googleAuth";
+import { transporter } from "../../lib/nodemailer";
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 import { jwtUtils } from "../../utils/jwt";
-import path from "path";
-import ejs from "ejs";
+import {
+  Actions,
+  RedisKeyPrefix,
+  redisActions,
+} from "../../utils/redisActions";
 import type {
   IGoogleLoginPayload,
   ILoginUserPayload,
@@ -17,17 +27,7 @@ import type {
   IRequestUser,
   IVerifyPatientEmail,
 } from "./auth.interface";
-import type { TokenPayload } from "google-auth-library";
-import { googleClient } from "../../lib/googleAuth";
-import { TForgotPassword, TResetPassword } from "./auth.validation";
-import {
-  redisActions,
-  Actions,
-  RedisKeyPrefix,
-} from "../../utils/redisActions";
-import { transporter } from "../../lib/nodemailer";
-import httpStatus from "http-status";
-import { AppError } from "../../utils/AppError";
+import type { TForgotPassword, TResetPassword } from "./auth.validation";
 
 const registerPatient = async (payload: IRegisterPatientPayload) => {
   const { name, password, patient: patientInfo } = payload;
@@ -427,6 +427,11 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
           googleId: googleIdTokenPayload.sub,
           authProvider: AuthProvider.GOOGLE,
           emailVerified: true,
+          patient: {
+            create: {
+              isDeleted: false,
+            },
+          },
         },
       });
 
@@ -434,18 +439,15 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
         process.cwd(),
         "src/app/templates/patient-welcome-email.ejs",
       );
-      const userRegistrationOTPVerificationEmail = await ejs.renderFile(
-        templatePath,
-        {
-          name: user.name,
-        },
-      );
+      const patientWelcomeEmail = await ejs.renderFile(templatePath, {
+        name: user.name,
+      });
 
       await transporter.sendMail({
         from: config.email_sender,
         to: user.email,
         subject: `Welcome to PH Healthcare, ${user.name}!`,
-        html: userRegistrationOTPVerificationEmail,
+        html: patientWelcomeEmail,
       });
     }
   }

@@ -18,21 +18,21 @@ async function getAdminAnalytics() {
   const totalPendingDocotrApplications = await prisma.doctor.count({
     where: {
       isDeleted: false,
-      verificatonStatus: DoctorVerificationStatus.PENDING,
+      verificationStatus: DoctorVerificationStatus.PENDING,
     },
   });
 
   const approvedDoctors = await prisma.doctor.count({
     where: {
       isDeleted: false,
-      verificatonStatus: DoctorVerificationStatus.APPROVED,
+      verificationStatus: DoctorVerificationStatus.APPROVED,
     },
   });
 
   const rejectedDoctors = await prisma.doctor.count({
     where: {
       isDeleted: false,
-      verificatonStatus: DoctorVerificationStatus.REJECTED,
+      verificationStatus: DoctorVerificationStatus.REJECTED,
     },
   });
 

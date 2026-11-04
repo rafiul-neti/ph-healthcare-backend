@@ -16,7 +16,7 @@ const createSchedule = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMySchedules = catchAsync(async (req: Request, res: Response) => {
-  const result = await ScheduleService.getMySchedules(
+  const { data, meta } = await ScheduleService.getMySchedules(
     req.validatedQuery,
     req.user!,
   );
@@ -25,7 +25,8 @@ const getMySchedules = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: httpStatus.OK,
     message: "Schedules retrieved successfully.",
-    data: result,
+    data,
+    meta,
   });
 });
 
@@ -54,13 +55,14 @@ const getScheduleById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getTodaysSchedule = catchAsync(async (req: Request, res: Response) => {
-  const result = await ScheduleService.getTodaysSchedule(req.validatedQuery);
+  const {data, meta} = await ScheduleService.getTodaysSchedule(req.validatedQuery);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Todays schedules retrieved successfully.",
-    data: result,
+    data,
+    meta
   });
 });
 

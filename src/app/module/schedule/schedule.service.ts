@@ -70,8 +70,8 @@ async function createSchedule(
   }
 
   const durationInMinutes = differenceInMinutes(
-    payload.startDateTime,
     payload.endDateTime,
+    payload.startDateTime,
   );
 
   const ALLOCATED_MINUTES_PER_SLOTS = 20;
@@ -79,6 +79,13 @@ async function createSchedule(
   const totalSlots = Math.floor(
     durationInMinutes / ALLOCATED_MINUTES_PER_SLOTS,
   );
+
+  if (totalSlots <= 0) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Schedule must be at least 20 minutes longer.",
+    );
+  }
 
   const createdSchedule = await prisma.schedule.create({
     data: {
@@ -409,8 +416,8 @@ async function getTodaysSchedule(query: IGetTodaysScheduleQuery) {
     throw new AppError(httpStatus.NOT_FOUND, "Doctor not found!");
   }
 
-  const limit = Number(query.limit) ?? 10;
-  const page = Number(query.page) ?? 1;
+  const limit = Number(query.limit) ? Number(query.limit) : 10;
+  const page = Number(query.page) ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
 
   const now = new Date();
@@ -425,8 +432,8 @@ async function getTodaysSchedule(query: IGetTodaysScheduleQuery) {
       startDateTime: {
         gte: startOfToday,
         lt: startOfTommorrow,
-        gt: now,
       },
+      endDateTime: { gt: now },
     },
     { availableSlots: { gt: 0 } },
   ];

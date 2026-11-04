@@ -13,7 +13,7 @@ export const deleteUnverifiedDoctors = async () => {
 					emailVerified: false,
 					createdAt: { lt: oneHourAgo },
 					doctor: {
-						verificatonStatus: DoctorVerificationStatus.PENDING,
+						verificationStatus: DoctorVerificationStatus.PENDING,
 					},
 				},
 			});
